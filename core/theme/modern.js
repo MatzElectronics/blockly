@@ -88,28 +88,28 @@ Blockly.Themes.Modern.defaultBlockStyles = {
 
 Blockly.Themes.Modern.categoryStyles = {
   "colour_category": {
-    "colour": "#a5745b"
+    "colour": "#a5745b" // 21.25     6
   },
   "list_category": {
-    "colour": "#745ba5"
+    "colour": "#745ba5"  // 13.91     1
   },
   "logic_category": {
-    "colour": "#5b80a5"
+    "colour": "#5b80a5" // 20.38     5
   },
   "loop_category": {
-    "colour": "#5ba55b"
+    "colour": "#5ba55b"  // 29.89    7
   },
   "math_category": {
-    "colour": "#5b67a5"
+    "colour": "#5b67a5"  // 14.64      2
   },
   "procedure_category": {
-    "colour": "#995ba5"
+    "colour": "#995ba5"   // 16.97     3
   },
   "text_category": {
-    "colour": "#5ba58c"
+    "colour": "#5ba58c"   // 31.03      8
   },
   "variable_category": {
-    "colour": "#a55b99"
+    "colour": "#a55b99"    // 17.78      4
   },
   "variable_dynamic_category": {
     "colour": "#a55b99"
