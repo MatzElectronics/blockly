@@ -36,139 +36,179 @@ goog.require('Blockly.utils.object');
  * @package
  * @extends {Blockly.blockRendering.ConstantProvider}
  */
-Blockly.minimalist.ConstantProvider = function() {
+Blockly.minimalist.ConstantProvider = function () {
   Blockly.minimalist.ConstantProvider.superClass_.constructor.call(this);
 
   /**
    * Adjust the notch width and height here.
    */
-  this.NOTCH_WIDTH = 15;
-  this.NOTCH_HEIGHT = 4;
+  this.NOTCH_WIDTH = 17;
+  this.NOTCH_HEIGHT = 8;
 
   /**
    * Adjust the left corner radius here.
    */
-  this.CORNER_RADIUS = 8;
+  this.CORNER_RADIUS = 5;
 
   /**
    * Adjust the tab width and height here.
    */
-  this.TAB_HEIGHT = 15;
-  this.TAB_WIDTH = 8;
+  this.TAB_HEIGHT = 16;
+  this.TAB_WIDTH = 7;
 };
 Blockly.utils.object.inherits(Blockly.minimalist.ConstantProvider,
-    Blockly.blockRendering.ConstantProvider);
+  Blockly.blockRendering.ConstantProvider);
 
 /**
  * Sample notches.
  */
 
-// /**
-//  * Rounded notch.
-//  * @override
-//  */
-// Blockly.minimalist.ConstantProvider.prototype.makeNotch = function() {
-//   var width = this.NOTCH_WIDTH;
-//   var height = this.NOTCH_HEIGHT;
-//   var radius = width / 1.9;
-//   function makeMainPath(dir) {
-//     return Blockly.utils.svgPaths.arc('a', '0 0 ' + (dir > 0 ? '0' : '1'), radius,
-//         Blockly.utils.svgPaths.point(dir * width / 2, height / 2)) +
-//         Blockly.utils.svgPaths.arc('a', '0 0 ' + (dir > 0 ? '0' : '1'), radius,
-//             Blockly.utils.svgPaths.point(dir * width / 2, -height / 2));
-//   }
-//   var pathLeft = makeMainPath(1);
-//   var pathRight = makeMainPath(-1);
+/**
+ * Rounded notch.
+ * @override
+ */
+/*
+Blockly.minimalist.ConstantProvider.prototype.makeNotch = function () {
+  var width = this.NOTCH_WIDTH;
+  var height = this.NOTCH_HEIGHT;
+  var radius = width / 1.9;
 
-//   return {
-//     width: width,
-//     height: height,
-//     pathLeft: pathLeft,
-//     pathRight: pathRight
-//   };
-// };
+  function makeMainPath(dir) {
+    return Blockly.utils.svgPaths.arc('a', '0 0 ' + (dir > 0 ? '0' : '1'), radius,
+        Blockly.utils.svgPaths.point(dir * width / 2, height / 2)) +
+      Blockly.utils.svgPaths.arc('a', '0 0 ' + (dir > 0 ? '0' : '1'), radius,
+        Blockly.utils.svgPaths.point(dir * width / 2, -height / 2));
+  }
+  var pathLeft = makeMainPath(1);
+  var pathRight = makeMainPath(-1);
 
-// /**
-//  * Triangle notch.
-//  * @override
-//  */
-// Blockly.minimalist.ConstantProvider.prototype.makeNotch = function() {
-//   var width = this.NOTCH_WIDTH;
-//   var height = this.NOTCH_HEIGHT;
-//   var outerWidth = width / 2;
-//   function makeMainPath(dir) {
-//     return Blockly.utils.svgPaths.line(
-//         [
-//           Blockly.utils.svgPaths.point(dir * outerWidth, height),
-//           Blockly.utils.svgPaths.point(dir * outerWidth, -height)
-//         ]);
-//   }
-//   var pathLeft = makeMainPath(1);
-//   var pathRight = makeMainPath(-1);
+  return {
+    width: width,
+    height: height,
+    pathLeft: pathLeft,
+    pathRight: pathRight
+  };
+};
+*/
 
-//   return {
-//     width: width,
-//     height: height,
-//     pathLeft: pathLeft,
-//     pathRight: pathRight
-//   };
-// };
 
-// /**
-//  * Square notch.
-//  * @override
-//  */
-// Blockly.minimalist.ConstantProvider.prototype.makeNotch = function() {
-//   var width = this.NOTCH_WIDTH;
-//   var height = this.NOTCH_HEIGHT;
-//   function makeMainPath(dir) {
-//     return Blockly.utils.svgPaths.line(
-//         [
-//           Blockly.utils.svgPaths.point(0, height),
-//           Blockly.utils.svgPaths.point(dir * width, 0),
-//           Blockly.utils.svgPaths.point(0, -height)
-//         ]);
-//   }
-//   var pathLeft = makeMainPath(1);
-//   var pathRight = makeMainPath(-1);
+/**
+ * Triangle notch.
+ * @override
+ */
 
-//   return {
-//     width: width,
-//     height: height,
-//     pathLeft: pathLeft,
-//     pathRight: pathRight
-//   };
-// };
+Blockly.minimalist.ConstantProvider.prototype.makeNotch = function () {
+  var width = this.NOTCH_WIDTH;
+  var height = this.NOTCH_HEIGHT;
+  var radius = this.CORNER_RADIUS / 2;
 
+  function makeMainPath(dir) {
+    return Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), radius, Blockly.utils.svgPaths.point(dir * 0.866 * radius, radius / 2)) + 
+      Blockly.utils.svgPaths.line([Blockly.utils.svgPaths.point(dir * (height - radius/2) * (0.433), height - radius)]) + 
+      Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), radius, Blockly.utils.svgPaths.point(dir * 0.866 * radius, radius / 2)) +
+      Blockly.utils.svgPaths.line([Blockly.utils.svgPaths.point(dir * (width - 1.516 * radius - 0.433 * height) * 2, 0)]) + 
+      Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), radius, Blockly.utils.svgPaths.point(dir * 0.866 * radius, radius / -2)) + 
+      Blockly.utils.svgPaths.line([Blockly.utils.svgPaths.point(dir * (height - radius/2) * (0.433), radius - height)]) + 
+      Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), radius, Blockly.utils.svgPaths.point(dir * 0.866 * radius, radius / -2));
+  }
+  var pathLeft = makeMainPath(1);
+  var pathRight = makeMainPath(-1);
+
+  return {
+    width: width * 2,
+    height: height,
+    pathLeft: pathLeft,
+    pathRight: pathRight
+  };
+};
+
+ /**
+  * Square notch.
+  * @override
+  */
+ /*
+Blockly.minimalist.ConstantProvider.prototype.makeNotch = function() {
+  var width = this.NOTCH_WIDTH;
+  var height = this.NOTCH_HEIGHT;
+  function makeMainPath(dir) {
+    return Blockly.utils.svgPaths.line(
+        [
+          Blockly.utils.svgPaths.point(0, height),
+          Blockly.utils.svgPaths.point(dir * width, 0),
+          Blockly.utils.svgPaths.point(0, -height)
+        ]);
+  }
+  var pathLeft = makeMainPath(1);
+  var pathRight = makeMainPath(-1);
+
+console.log({
+  width: width,
+  height: height,
+  pathLeft: pathLeft,
+  pathRight: pathRight
+});
+
+  return {
+    width: width,
+    height: height,
+    pathLeft: pathLeft,
+    pathRight: pathRight
+  };
+};
+*/
 
 /**
  * Sample puzzle tab.
  */
 
-// /**
-//  * Square puzzle tab.
-//  * @override
-//  */
-// Blockly.minimalist.ConstantProvider.prototype.makePuzzleTab = function() {
-//   var width = this.TAB_WIDTH;
-//   var height = this.TAB_HEIGHT;
+ /**
+  * Square puzzle tab.
+  * @override
+  */
+ Blockly.minimalist.ConstantProvider.prototype.makePuzzleTab = function() {
+  var width = this.TAB_WIDTH;
+  var height = this.TAB_HEIGHT;
+  var radius = this.CORNER_RADIUS / 2;
+  var halfrad = radius / 2;
 
-//   function makeMainPath(up) {
-//     return Blockly.utils.svgPaths.line(
-//         [
-//           Blockly.utils.svgPaths.point(-width, 0),
-//           Blockly.utils.svgPaths.point(0, -1 * up * height),
-//           Blockly.utils.svgPaths.point(width, 0)
-//         ]);
-//   }
+  function makeMainPath(dir) {
+    return Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), radius, Blockly.utils.svgPaths.point(-radius, -dir * radius)) + 
+           Blockly.utils.svgPaths.line( [Blockly.utils.svgPaths.point(-width + radius * 2, 0)] ) + 
+           Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), radius, Blockly.utils.svgPaths.point(-radius, -dir * radius)) + 
+           Blockly.utils.svgPaths.line( [Blockly.utils.svgPaths.point(0, -dir * (height - radius * 4))] ) + 
+           Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), radius, Blockly.utils.svgPaths.point(radius, -dir * radius)) + 
+           Blockly.utils.svgPaths.line( [Blockly.utils.svgPaths.point(width - radius * 2, 0)] ) +
+           Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), radius, Blockly.utils.svgPaths.point(radius, -dir * radius));
+  }
 
-//   var pathUp = makeMainPath(1);
-//   var pathDown = makeMainPath(-1);
+  var pathUp = makeMainPath(1);
+  var pathDown = makeMainPath(-1);
 
-//   return {
-//     width: width,
-//     height: height,
-//     pathDown: pathDown,
-//     pathUp: pathUp
-//   };
-// };
+  return {
+    width: width,
+    height: height,
+    pathDown: pathDown,
+    pathUp: pathUp
+  };
+};
+
+
+/*
+  function makeMainPath(dir) {
+    return Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), halfrad, Blockly.utils.svgPaths.point(-halfrad, dir * halfrad)) +
+    Blockly.utils.svgPaths.line(
+        [
+          Blockly.utils.svgPaths.point(halfrad + radius - width, 0)
+        ]) + 
+        Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), radius, Blockly.utils.svgPaths.point(-radius, dir * radius)) +
+        Blockly.utils.svgPaths.line(
+          [
+            Blockly.utils.svgPaths.point(0, dir * (height - radius * 2))
+          ]) + 
+          Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '1' : '0'), radius, Blockly.utils.svgPaths.point(radius, dir * radius)) +
+          Blockly.utils.svgPaths.line([
+            Blockly.utils.svgPaths.point(width - halfrad - radius, 0)
+          ]) + 
+          Blockly.utils.svgPaths.arc('a', '1 0 ' + (dir > 0 ? '0' : '1'), halfrad, Blockly.utils.svgPaths.point(halfrad, dir * halfrad))
+  }
+*/

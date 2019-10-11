@@ -71,6 +71,7 @@
 goog.require('Blockly.blockRendering.Debug');
 goog.require('Blockly.minimalist.Renderer');
 goog.require('Blockly.Themes.Material');
+goog.require('Blockly.Themes.PrintFriendly');
 goog.require('Blockly.thrasos.Renderer');
 goog.require('Blockly.zelos.Renderer');
 </script>
@@ -328,6 +329,9 @@ function changeTheme() {
     Blockly.getMainWorkspace().setTheme(Blockly.Themes.HighContrast);
   } else if (theme.value === "material") {
     Blockly.getMainWorkspace().setTheme(Blockly.Themes.Material);
+  } else if (theme.value === "print_friendly") {
+    Blockly.getMainWorkspace().setTheme(Blockly.Themes.PrintFriendly);
+    // TODO: set block outline thickness to 2px
   } else {
     Blockly.getMainWorkspace().setTheme(Blockly.Themes.Classic);
   }
@@ -495,8 +499,60 @@ var spaghettiXml = [
   '    <next></next>',
   '  </block>'].join('\n');
 
-</script>
+function getSVGtext() {
+  var svgRaw = document.getElementsByClassName('blocklyBlockCanvas')[0];
+  var svgBBox = svgRaw.getBBox();
+  var svgOutput = '<?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+  svgOutput += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
+  svgOutput += ' width="' + (svgBBox.x + svgBBox.width + 5) + '" height="' + (svgBBox.y + svgBBox.height + 5) + '" transform="translate(' + (svgBBox.x * -1 + 2.5) + ',' + (svgBBox.y * -1 + 2.5) + ')"><style><![CDATA[\n';
+  svgOutput += '.blocklyEditableText rect{fill:#fff;fill-opacity:0.6;}.blocklyEditableText text{fill:#000;}.blocklyText {font-family:sans-serif;font-size:14px;fill:#fff;}';
+  svgOutput += '.blocklyIconShape{fill:#00f;stroke:#fff;stroke-width:1px;}.blocklyIconGroup,.blocklyIconGroupReadonly{opacity:0.6;}.blocklyIconSymbol{fill:#fff;}\n]]></style>';
+  svgOutput += svgRaw.outerHTML + '</svg>';
 
+  svgOutput = svgOutput.replace(/<g class="blocklyBlockCanvas"["\w\(\), =\-\.]+>/g, '<g class="blocklyBlockCanvas">')
+  svgOutput = svgOutput.replace(/\&nbsp\;/g,'&#160;');
+  return [svgOutput, svgBBox.x + svgBBox.width + 5, svgBBox.y + svgBBox.height + 5];
+}
+
+function toSVG() {
+  var svgOutput = getSVGtext();
+  var a = document.createElement('a');
+  a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(svgOutput[0]));
+  a.download = "block_image.svg";
+  document.body.appendChild(a);
+  a.click();
+}
+
+
+function toPNG() {
+  var svgOutput = getSVGtext();
+  var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgOutput[0])));
+  var img = '<img src="' + imgsrc + '">';
+  document.getElementById("svg-container").innerHTML = (img);
+
+  var canvas = document.getElementById("canvas");
+  canvas.height = svgOutput[2];
+  canvas.width = svgOutput[1];
+
+  var context = canvas.getContext("2d");
+
+  var image = new Image;
+  image.src = imgsrc;
+  image.onload = function() {
+	  context.drawImage(image, 0, 0);
+
+	  var canvasdata = canvas.toDataURL("image/png");
+
+	  var pngimg = '<img src="' + canvasdata + '" height="' + svgOutput[2] + '" width="' + svgOutput[1] + '">';
+    document.getElementById("png-container").innerHTML = (pngimg);
+
+	  var a = document.createElement("a");
+	  a.download = "block_image.png";
+	  a.href = canvasdata;
+	  a.click();
+  };
+}
+</script>
 <style>
   html, body {
     height: 100%;
@@ -579,11 +635,16 @@ var spaghettiXml = [
     <option value="dark">Dark</option>
     <option value="high_contrast">High Contrast</option>
     <option value="material">Material</option>
+    <option value="print_friendly">Print-Friendly</option>
   </select>
   <p>
     <input type="button" value="Export to XML" onclick="toXml()">
     &nbsp;
     <input type="button" value="Import from XML" onclick="fromXml()" id="import">
+    <br>
+    <input type="button" value="Download SVG" onclick="toSVG()">
+    &nbsp;
+    <input type="button" value="Download PNG" onclick="toPNG()">
     <br>
     <input type="button" value="To JavaScript" onclick="toCode('JavaScript')">
     &nbsp;
@@ -620,6 +681,10 @@ var spaghettiXml = [
     </li>
   </ul>
 
+  <canvas id="canvas" style="display: none;"></canvas>
+  <div id="png-container" style="display: none;"></div>
+  <div id="svg-container" style="display: none;"></div>
+  
 
   <!-- The next three blocks of XML are sample toolboxes for testing basic
   configurations.  For more information on building toolboxes, see https://developers.google.com/blockly/guides/configure/web/toolbox -->
